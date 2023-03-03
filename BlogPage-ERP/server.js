@@ -83,6 +83,29 @@ app.get("/comments/:id", async(req,res) => {
     }
 });
 
+// get all categories
+app.get("/categories", async(req,res) => {
+    try{
+        const cats = await pool.query("select * from category order by cat_id asc");
+        res.json(cats.rows);
+    }
+    catch(err){
+        console.log(err.message);
+    }
+});
+
+// get all posts by category id
+app.get("/categories/:id/posts", async(req,res) => {
+    const cat_id = req.params.id;
+    try{
+        const posts = await pool.query("select * from posts where posts.cat_id = $1", [cat_id]);
+        res.json(posts.rows);
+    }
+    catch(err){
+        console.log(err.message);
+    }
+});
+
 // insert a new user 
 app.post("/users/new_user", async(req,res) => {
     try{
